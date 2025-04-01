@@ -1,0 +1,8 @@
+@charset "UTF-8";
+
+.bg-busan{
+    background-image: url('../images/busan1.png');
+    background-size : cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
