@@ -42,12 +42,34 @@
 				}				
 			};
 			
-			$('.move_detail').on('click', function(){
-				const index = $('.move_detail').index(this);
-				$('#box1').hide();
-				$('#fullpage').removeClass('hidden');
-				startFullPage();
-				fullpage_api.moveTo(index + 1);
+			const overlay = document.getElementById('detailOverlay');
+			const closeBtn = document.getElementById('closeOverlay');
+			const detailBoxes = document.querySelectorAll('.day-detail');
+
+			document.querySelectorAll('.move_detail').forEach(card => {
+				card.addEventListener('click', () => {
+					const targetId = card.getAttribute('data-detail');
+
+					detailBoxes.forEach(box => box.classList.add('hidden'));
+					overlay.classList.remove('fade-out', 'hidden');
+
+					const target = document.getElementById(targetId);
+					if ( target ) target.classList.remove('hidden');
+
+					overlay.classList.remove('hidden');
+					requestAnimationFrame(() => overlay.classList.add('fade-in'));
+				});
+			});
+
+			closeBtn.addEventListener('click', () => {
+				overlay.classList.remove('fade-in');
+				overlay.classList.add('fade-out');
+
+				setTimeout(() => {
+					overlay.classList.add('hidden');
+					overlay.classList.add('fade-out');
+					detailBoxes.forEach(box => box.classList.add('hidden'));
+				}, 300);
 			});
 		});
 	</script>
@@ -55,68 +77,68 @@
     <body>
 		<div id="fullpage">
 			<section id="main" class="section bg-busan flex flex-col items-center justify-center min-h-screen">
-				<h1 id="floatingTitle" class="text-5xl sm:text-6xl font-bold tracking-tight whitespace-nowrap relative">부산스러운 바다여행</h1>
+				<h1 id="floatingTitle" class="text-5xl sm:text-6xl font-bold tracking-tight whitespace-nowrap relative mb-20">부산스러운 바다여행</h1>
 
 				<div class="flex flex-wrap justify-center gap-8 w-11/12">
-				  <div class="move_detail card" data-target="day1">5월 1일 (목)</div>
-				  <div class="move_detail card" data-target="day2">5월 2일 (금)</div>
-				  <div class="move_detail card" data-target="day3">5월 3일 (토)</div>
-				  <div class="move_detail card" data-target="day4">5월 4일 (일)</div>
-				  <div class="move_detail card" data-target="day5">5월 5일 (월)</div>
+				  <div class="move_detail card" data-detail="day1">5월 1일 (목)</div>
+				  <div class="move_detail card" data-detail="day2">5월 2일 (금)</div>
+				  <div class="move_detail card" data-detail="day3">5월 3일 (토)</div>
+				  <div class="move_detail card" data-detail="day4">5월 4일 (일)</div>
+				  <div class="move_detail card" data-detail="day5">5월 5일 (월)</div>
 				</div>				
 			</section>
 			
 			<div id="detailOverlay" class="overlay hidden fixed inset-0 bg-white z-50 flex flex-col items-center justify-center text-center transition-opacity duration-500 opacity-0">
-				<button id="closeOverlay" class="absolute top-6 right-6 text-3xl text-gray-600 font-bold">&times;</div>
+				<button id="closeOverlay" class="absolute top-6 right-6 text-3xl text-gray-600 font-bold">&times;</button>
+
+				<section id="day1" class="day-detail hidden">
+					<h2 class="text-3xl font-bold mb-4">5월 1일 일정</h2>
+					<dl>
+						<dt>AM 06:00</dt>
+						<dd>출발</dd> <br/>
+						<dt>AM 10:00</dt> 
+						<dd>부산 도착</dd>  <br/>
+						<dt>PM 04:00</dt> 
+						<dd>숙소 입실 (해운대)</dd> <br/>
+					</dl>
+				</section>
+				
+				<section id="day2" class="day-detail hidden">
+					<h2 class="text-3xl font-bold mb-4">5월 2일 일정</h2>
+					<dl>
+						<dt>AM 10:00</dt>
+						<dd>이재모 피자</dd> <br/>
+						<dt>PM 06:00</dt> 
+						<dd>스카이 캡슐</dd> <br/>
+						<dt>PM 08:00</dt>
+						<dd>야경</dd> <br/> <br/>
+					</dl>
+				</section>
+				
+				<section id="day3" class="day-detail hidden">
+					<h2 class="text-3xl font-bold mb-4">5월 3일 일정</h2>
+					<dl>
+						<dt>AM 10:00</dt>
+						<dd>해동 용궁사</dd> <br/>
+					</dl>
+				</section>
+				
+				<section id="day4" class="day-detail hidden">
+					<h2 class="text-3xl font-bold mb-4">5월 3일 일정</h2>
+					<dl>
+						<dt>PM 02:00</dt>
+						<dd>레이저 아레나</dd>
+					</dl>
+				</section>
+				
+				<section id="day5" class="day-detail hidden">
+					<h2 class="text-3xl font-bold mb-4">5월 3일 일정</h2>
+					<dl>
+						<dt>AM 10:00</dt>
+						<dd>퇴실</dd> <br/>
+					</dl>
+				</section>
 			</div>
-			
-			<section id="day1" class="day-detail hidden">
-				<h2 class="text-3xl font-bold mb-4">5월 1일 일정</h2>
-				<dl>
-					<dt>AM 06:00</dt>
-					<dd>출발</dd> <br/>
-					<dt>AM 10:00</dt> 
-					<dd>부산 도착</dd>  <br/>
-					<dt>PM 04:00</dt> 
-					<dd>숙소 입실 (해운대)</dd> <br/>
-				</dl>
-			</section>
-			
-			<section id="day2" class="day-detail hidden">
-				<h2 class="text-3xl font-bold mb-4">5월 2일 일정</h2>
-				<dl>
-					<dt>AM 10:00</dt>
-					<dd>이재모 피자</dd> <br/>
-					<dt>PM 06:00</dt> 
-					<dd>스카이 캡슐</dd> <br/>
-					<dt>PM 08:00</dt>
-					<dd>야경</dd> <br/> <br/>
-				</dl>
-			</section>
-			
-			<section id="day3" class="day-detail hidden">
-				<h2 class="text-3xl font-bold mb-4">5월 3일 일정</h2>
-				<dl>
-					<dt>AM 10:00</dt>
-					<dd>해동 용궁사</dd> <br/>
-				</dl>
-			</section>
-			
-			<section id="day4" class="day-detail hidden">
-				<h2 class="text-3xl font-bold mb-4">5월 3일 일정</h2>
-				<dl>
-					<dt>PM 02:00</dt>
-					<dd>레이저 아레나</dd>
-				</dl>
-			</section>
-			
-			<section id="day4" class="day-detail hidden">
-				<h2 class="text-3xl font-bold mb-4">5월 3일 일정</h2>
-				<dl>
-					<dt>AM 10:00</dt>
-					<dd>퇴실</dd> <br/>
-				</dl>
-			</section>
 		</div>
     </body>
 </html>

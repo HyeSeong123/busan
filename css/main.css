@@ -25,14 +25,14 @@
 
 #floatingTitle::after {
     background-image: url('../images/main_logo.png');
-    top : -35px;
+    top : -45px;
     left : -85px;
 }
 
 #floatingTitle::before {
     background-image: url('../images/main_logo2.png');
-    bottom : -20px;
-    right : -90px;
+    bottom : -45px;
+    right : -100px;
     background-position: right;
 }
 
@@ -101,12 +101,29 @@
 }
 
 @media (max-width: 640px) {
-	#floatingTitle::before {
-		bottom: -25px;
+	#floatingTitle::after {
+		top: -50px;
 	}
-	 
+	#floatingTitle::before {
+		bottom: -45px;
+	}
 }
 
+@media (max-width: 560px) {
+	#floatingTitle {
+		font-size : 2.5rem;
+	}
+	#floatingTitle::after,
+	#floatingTitle::before
+	 {
+		width: 95px;
+		height: 95px;
+	}
+	
+	#floatingTitle::after {
+		
+	}
+}
 @media (max-width: 440px) {
 	#floatingTitle {
 		font-size : 2rem;
