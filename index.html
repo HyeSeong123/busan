@@ -2,7 +2,7 @@
 <html lang="ko">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=yes" />
         <title>부산 여행</title>
         
         <link href="./css/common.css" type="text/css" rel="stylesheet">
@@ -12,8 +12,12 @@
         <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.0/Cafe24SsurroundAir.woff" rel="stylesheet">
         
+		<!-- fullPage.js -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.20/fullpage.min.css" />
+		
         <script src="https://cdn.tailwindcss.com"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.20/fullpage.min.js"></script>
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
 	
@@ -26,91 +30,94 @@
 				yoyo: true,
 				ease : 'power1.inOut'
 			});
+			
+			let myFullpage = null;
+			const startFullPage = () => {
+				if (!myFullpage) {
+					myFullpage = new fullpage('#fullpage', {
+						autoScrolling : true,
+						navigation : true,
+						scrollHorizontally: true
+					});
+				}				
+			};
+			
+			$('.move_detail').on('click', function(){
+				const index = $('.move_detail').index(this);
+				$('#box1').hide();
+				$('#fullpage').removeClass('hidden');
+				startFullPage();
+				fullpage_api.moveTo(index + 1);
+			});
 		});
 	</script>
 	
-    <body class="bg-busan min-h-screen relative">
-		<div class="flex items-center justify-center mt-20 mb-12 text-white">
-		  <!-- 타이틀 텍스트 -->
-		  <h1 id="floatingTitle" class="text-3xl md:text-6xl font-bold tracking-tight whitespace-nowrap relative">
-			<span>부산스러운 바다여행</span>
-		  </h1>		  
+    <body>
+		<div id="fullpage">
+			<section id="main" class="section bg-busan flex flex-col items-center justify-center min-h-screen">
+				<h1 id="floatingTitle" class="text-5xl sm:text-6xl font-bold tracking-tight whitespace-nowrap relative">부산스러운 바다여행</h1>
+
+				<div class="flex flex-wrap justify-center gap-8 w-11/12">
+				  <div class="move_detail card" data-target="day1">5월 1일 (목)</div>
+				  <div class="move_detail card" data-target="day2">5월 2일 (금)</div>
+				  <div class="move_detail card" data-target="day3">5월 3일 (토)</div>
+				  <div class="move_detail card" data-target="day4">5월 4일 (일)</div>
+				  <div class="move_detail card" data-target="day5">5월 5일 (월)</div>
+				</div>				
+			</section>
+			
+			<div id="detailOverlay" class="overlay hidden fixed inset-0 bg-white z-50 flex flex-col items-center justify-center text-center transition-opacity duration-500 opacity-0">
+				<button id="closeOverlay" class="absolute top-6 right-6 text-3xl text-gray-600 font-bold">&times;</div>
+			</div>
+			
+			<section id="day1" class="day-detail hidden">
+				<h2 class="text-3xl font-bold mb-4">5월 1일 일정</h2>
+				<dl>
+					<dt>AM 06:00</dt>
+					<dd>출발</dd> <br/>
+					<dt>AM 10:00</dt> 
+					<dd>부산 도착</dd>  <br/>
+					<dt>PM 04:00</dt> 
+					<dd>숙소 입실 (해운대)</dd> <br/>
+				</dl>
+			</section>
+			
+			<section id="day2" class="day-detail hidden">
+				<h2 class="text-3xl font-bold mb-4">5월 2일 일정</h2>
+				<dl>
+					<dt>AM 10:00</dt>
+					<dd>이재모 피자</dd> <br/>
+					<dt>PM 06:00</dt> 
+					<dd>스카이 캡슐</dd> <br/>
+					<dt>PM 08:00</dt>
+					<dd>야경</dd> <br/> <br/>
+				</dl>
+			</section>
+			
+			<section id="day3" class="day-detail hidden">
+				<h2 class="text-3xl font-bold mb-4">5월 3일 일정</h2>
+				<dl>
+					<dt>AM 10:00</dt>
+					<dd>해동 용궁사</dd> <br/>
+				</dl>
+			</section>
+			
+			<section id="day4" class="day-detail hidden">
+				<h2 class="text-3xl font-bold mb-4">5월 3일 일정</h2>
+				<dl>
+					<dt>PM 02:00</dt>
+					<dd>레이저 아레나</dd>
+				</dl>
+			</section>
+			
+			<section id="day4" class="day-detail hidden">
+				<h2 class="text-3xl font-bold mb-4">5월 3일 일정</h2>
+				<dl>
+					<dt>AM 10:00</dt>
+					<dd>퇴실</dd> <br/>
+				</dl>
+			</section>
 		</div>
-
-        <div class="flex justify-center w-full">
-            <div class="bg-white/80 backdrop-blur-0 rounded-xl shadow-lg p-8 w-11/12 text-center">
-                <div class="flex flex-col md:flex-row items-start justify-center gap-28 w-full">
-                    <div class="text-center w-full md:w-2/12">
-                        <h3 class="text-2xl font-medium mb-4">
-                            <svg xmlns="http://.www.w3.org/2000/svg" class="w-6 h-6 md:w-8 md:h-8 text-gray-700 inline" fill="none" viewBox="0 0 26 26" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            5월 1일 (목)
-                        </h3>
-
-                        <div class="content_box text-left">
-                            <p>AM 06:00 : 출발</p>
-                            <p>AM 10:00 : 부산 도착</p>
-                            <p>PM 04:00 : 숙소 입실 (해운대)</p>
-                        </div>
-                    </div>
-                    
-                    <div class="text-center w-full md:w-2/12">
-                        <h3 class="text-2xl font-medium mb-4">
-                            <svg xmlns="http://.www.w3.org/2000/svg" class="w-8 h-8 text-gray-700 inline" fill="none" viewBox="0 0 26 26" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            5월 2일 (금)
-                        </h3>
-
-                        <div class="content_box text-left">
-                            <p>AM 10:00 : 이재모 피자</p>
-                            <p>PM 6:00 : 스카이 캡슐</p>
-                            <p>PM 8:00 : 야경</p>
-                        </div>
-                    </div>
-
-                    <div class="text-center w-full md:w-2/12">
-                        <h3 class="text-2xl font-medium mb-4">
-                            <svg xmlns="http://.www.w3.org/2000/svg" class="w-8 h-8 text-gray-700 inline" fill="none" viewBox="0 0 26 26" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            5월 3일 (토)
-                        </h3>
-
-                        <div class="content_box text-left">
-                            <p>AM 10:00 : 해동 용궁사</p>
-                        </div>
-                    </div>
-
-                    <div class="text-center w-full md:w-2/12">
-                        <h3 class="text-2xl font-medium mb-4">
-                            <svg xmlns="http://.www.w3.org/2000/svg" class="w-8 h-8 text-gray-700 inline" fill="none" viewBox="0 0 26 26" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            5월 4일 (일)
-                        </h3>
-
-                        <div class="content_box text-left">
-                            <p>PM 02:00 : 레이저 아레나</p> 
-                        </div>
-                    </div>
-
-                    <div class="text-center w-full md:w-2/12">
-                        <h3 class="text-2xl font-medium mb-4">
-                            <svg xmlns="http://.www.w3.org/2000/svg" class="w-8 h-8 text-gray-700 inline" fill="none" viewBox="0 0 26 26" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            5월 5일 (월)
-                        </h3>
-
-                        <div class="content_box text-left">
-                            <p>AM 10:00 : 퇴실</p> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </body>
 </html>
 

@@ -41,3 +41,90 @@
     font-family: 'BusanBada', sans-serif;
     font-weight: normal;
 }
+
+#box2 > div {
+	height : 100%;
+}
+
+.move_detail {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+	display: block;
+	height : 100%;
+	border-radius : 0.75rem;
+}
+
+.move_detail:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.move_detail dl > * {
+	display : inline-block;
+}
+
+.section {
+	height : 100vh;
+	width : 100vw;
+	overflow : hidden;
+}
+
+.card {
+	cursor: pointer;
+    background-color: rgba(255,255,255,0.8);
+    color: #333;
+    padding: 1.5rem 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.overlay {
+	backdrop-filter: blur(8px);
+}
+
+.fade-in {
+	opacity: 1 !important;
+}
+
+.fade-out {
+	opacity: 0 !important;
+}
+/* 반응형 */
+@media (max-width: 1024px) {
+	#box2 {
+		flex-direction : column;
+	}
+}
+
+@media (max-width: 640px) {
+	#floatingTitle::before {
+		bottom: -25px;
+	}
+	 
+}
+
+@media (max-width: 440px) {
+	#floatingTitle {
+		font-size : 2rem;
+	}
+	
+	#floatingTitle::before,
+	#floatingTitle::after
+	 {
+		width : 60px;
+		height : 60px;
+	}
+	#floatingTitle::after {
+		top : -22px;
+		left : -45px;
+	}
+	
+	#floatingTitle::before {
+		bottom : -13px;
+		right : -48px;
+	}
+}
