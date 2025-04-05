@@ -25,18 +25,18 @@
 
 #floatingTitle::after {
     background-image: url('../images/main_logo.png');
-    top : -45px;
+    top : -75px;
     left : -85px;
 }
 
 #floatingTitle::before {
     background-image: url('../images/main_logo2.png');
-    bottom : -45px;
-    right : -100px;
+    bottom : -20px;
+    right : -95px;
     background-position: right;
 }
 
-#floatingTitle span{
+#floatingTitle{
     color : #0b7bb3;
     font-family: 'BusanBada', sans-serif;
     font-weight: normal;
@@ -72,10 +72,12 @@
 	cursor: pointer;
     background-color: rgba(255,255,255,0.8);
     color: #333;
-    padding: 1.5rem 2rem;
+    padding: 20px 10px;
     border-radius: 1rem;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 18%;
+    height: 100%;	
 }
 .card:hover {
     transform: translateY(-5px) scale(1.05);
@@ -101,11 +103,22 @@
 }
 
 @media (max-width: 640px) {
+	#floatingTitle::after,
+	#floatingTitle::before{
+		width: 80px;
+		height : 80px;
+	}
 	#floatingTitle::after {
 		top: -50px;
+		left : -60px;
 	}
 	#floatingTitle::before {
-		bottom: -45px;
+		right : -60px;
+		bottom: -15px;
+	}
+	.card {
+		height : 25%;
+		width: 85%;
 	}
 }
 
