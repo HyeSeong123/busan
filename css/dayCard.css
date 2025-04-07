@@ -1,0 +1,42 @@
+@charset "UTF-8";
+
+@font-face {
+    font-family: 'BusanBada';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BusanBada.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'RixYeoljeongdo_Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2102-01@1.0/RixYeoljeongdo_Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'MapoFlowerIsland';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/MapoFlowerIslandA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'GangwonEduSaeeum_OTFMediumA';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduSaeeum_OTFMediumA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+#detailOverlay{
+	background: rgba(255, 255, 255, 0.9);
+	backdrop-filter : blue(10px);
+	background : linear-gradient(to right, #a1c4fd, #c2e9fb);
+}
+
+#day1, #day2, #day3, #day4, #day5 {
+	height : 100%;
+}
+
+#day1 > div{
+	background : #fefefe;
+	padding : 20px 0;
+	border-radius : 10px;
+}

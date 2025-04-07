@@ -7,6 +7,7 @@
         
         <link href="./css/common.css" type="text/css" rel="stylesheet">
         <link href="./css/main.css" type="text/css" rel="stylesheet">
+		<link href="./css/dayCard.css" type="text/css" rel="stylesheet">
 
         <!-- 폰트 -->
         <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" rel="stylesheet">
@@ -17,11 +18,13 @@
 		
         <script src="https://cdn.tailwindcss.com"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.20/fullpage.min.js"></script>
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
 	
 	<script type="text/javascript">
+		/* GSAP */
 		$(function(){
 			gsap.to('#floatingTitle', {
 				y: -10,
@@ -31,6 +34,10 @@
 				ease : 'power1.inOut'
 			});
 			
+		});
+		
+		/* FullPage */
+		$(function(){
 			let myFullpage = null;
 			const startFullPage = () => {
 				if (!myFullpage) {
@@ -54,10 +61,37 @@
 					overlay.classList.remove('fade-out', 'hidden');
 
 					const target = document.getElementById(targetId);
-					if ( target ) target.classList.remove('hidden');
+					if ( target ) {
+						target.classList.remove('hidden');
+						target.classList.add('overlayOn');
+					};
 
 					overlay.classList.remove('hidden');
 					requestAnimationFrame(() => overlay.classList.add('fade-in'));
+					
+					// GSAP 애니메이션 추가 부분
+					setTimeout(() => {
+						gsap.utils.toArray(`#${targetId} > div > div`).forEach(el => {
+							gsap.fromTo(el,
+								{ opacity: 0, x: -50, scale: 0.95 },
+								{
+									scrollTrigger: {
+										trigger: el,
+										start: "top 85%",
+										toggleActions: "play none none none"
+									},
+									opacity: 1,
+									x: 0,
+									scale: 1,
+									duration: 1,
+									ease: "power3.out",
+									onStart: () => {
+										el.classList.remove('opacity-0', 'translate-x-12'); // Tailwind 초기 상태 제거
+									}
+								}
+							);
+						});
+					}, 100); // 애니메이션 등록 시점 약간 딜레이
 				});
 			});
 
@@ -69,19 +103,44 @@
 					overlay.classList.add('hidden');
 					overlay.classList.add('fade-out');
 					detailBoxes.forEach(box => box.classList.add('hidden'));
+					detailBoxes.forEach(box => box.classList.remove('overlayOn'));
 				}, 300);
 			});
 		});
+		
+		/* 모달 관련 */
+		$(function(){
+			const dayDetail = document.querySelectorAll('.day-detail img');
+			
+			dayDetail.forEach(function(target){
+				console.log(target);
+				target.addEventListener('click', function(src){
+					showModal(src.target.src);
+				});
+			});
+			
+		});
+		
+		function showModal(src){
+			const modal = document.getElementById('modal');
+			const modalImg = document.getElementById('modal-img');
+			modalImg.src = src;
+			modal.style.display = 'block';
+		}
+		
+		function hideModal(){
+			document.getElementById('modal').style.display = 'none';
+		}
 	</script>
 	
     <body>
 		<div id="fullpage">
-			<section id="main" class="section bg-busan flex flex-col items-center flex-start lg:justify-center min-h-screen">
+			<section id="main" class="section bg-busan flex flex-col items-center flex-start lg:justify-center sm:min-h-screen">
 				<h1 id="floatingTitle" class="text-5xl sm:text-6xl font-bold tracking-tight whitespace-nowrap relative lg:mt-0 sm:mt-20 mt-10 mb-5">부산스러운 바다여행</h1>
 
-				<div class="flex flex-wrap justify-center gap-6 w-full">
+				<div class="flex lg:flex-wrap lg:flex-row flex-col justify-center items-center sm:gap-6 gap-2 w-full">
 				  <div class="move_detail card" data-detail="day1">
-					<h4>5월 1일 (목)</h4>
+					<strong>5월 1일 (목)</strong>
 					<dl>
 						<dt>06:00</dt>
 						<dd>출발</dd> <br/>
@@ -92,12 +151,12 @@
 						<dt>14:00</dt> 
 						<dd>스미다 티하우스</dd>  <br/>
 						<dt>17:00</dt> 
-						<dd>해목</dd> <br/>
+						<dd>해목</dd>
 					</dl>
 
 				</div>
 				  <div class="move_detail card" data-detail="day2">
-					5월 2일 (금)
+					<strong>5월 2일 (금)</strong>
 					<dl>
 						<dt>10:00</dt>
 						<dd>흑송 우동소바</dd> <br/>
@@ -108,11 +167,11 @@
 						<dt>18:00</dt> 
 						<dd>스카이 캡슐</dd> <br/>
 						<dt>20:00</dt>
-						<dd>야경 및 회 포장</dd> <br/> <br/>
+						<dd>야경 및 회 포장</dd> 
 					</dl>
 				</div>
 				  <div class="move_detail card" data-detail="day3">
-					5월 3일 (토)
+					<strong>5월 3일 (토)</strong>
 					<dl>
 						<dt>11:30</dt>
 						<dd>솔내음한정식</dd> <br/>
@@ -123,31 +182,37 @@
 						<dt>17:00</dt>
 						<dd>신발원 포장</dd> <br/>
 						<dt>18:00</dt>
-						<dd>숙소</dd> <br/>
+						<dd>숙소</dd>
 					</dl>
 				</div>
-				  <div class="move_detail card" data-detail="day4">5월 4일 (일)</div>
-				  <div class="move_detail card" data-detail="day5">5월 5일 (월)</div>
+				  <div class="move_detail card" data-detail="day4">
+					<strong>5월 4일 (일)</strong>
+				  </div>
+				  <div class="move_detail card" data-detail="day5">
+					<strong>5월 5일 (월)</strong>
+				  </div>
 				</div>				
 			</section>
 			
 			<div id="detailOverlay" class="overlay hidden fixed inset-0 bg-white z-50 flex flex-col items-center justify-center text-center transition-opacity duration-500 opacity-0">
-				<button id="closeOverlay" class="absolute top-6 right-6 text-3xl text-gray-600 font-bold">&times;</button>
+				<button id="closeOverlay" class="absolute top-0 right-1 text-3xl text-gray-600 font-bold">&times;</button>
 
-				<section id="day1" class="day-detail hidden">
-					<h2 class="text-3xl font-bold mb-4">5월 1일 일정</h2>
-					<strong>중동 1484-18</strong>
-					<dl>
-						<dt>AM 06:00</dt>
-						<dd>출발</dd> <br/>
-						<dt>AM 10:00</dt> 
-						<dd>부산 도착</dd>  <br/>
-						<dt>PM 04:00</dt> 
-						<dd>숙소 입실 (해운대)</dd> <br/>
-					</dl>
+				<section id="day1" class="day-detail hidden mx-auto text-left space-y-10 w-11/12">
+						<h2 class="text-3xl font-bold text-left mb-6 mt-4 block">5월 1일 일정</h2>
+						
+						<div class="flex flex-col md:flex-row gap-4 justify-content items-center">
+							<div class="flex-1 justify-content items-center w-11/12 opacity-0 translate-x-12 transition-none">
+								<h3 class="text-xl font-semibold mb-2">06:00 부산 출발</h3>
+								<img src="./images/day1/image1.jpg" class="w-full md:w-60 md:w-3/5 h-[25vh] object-cover rounded-xl shadow-md animate-img mb-4" />
+								<ul class="text-gray-700 list-disc list-inside space-y-1">
+									<li>평화로운 아파트에서 6시 출발</li>
+									<li>예상 소요 시간 : 4시간</li>
+								</ul>
+							</div>
+						</div>	
 				</section>
 				
-				<section id="day2" class="day-detail hidden">
+				<section id="day2" class="day-detail hidden mx-auto text-left space-y-10 w-11/12">
 					<h2 class="text-3xl font-bold mb-4">5월 2일 일정</h2>
 					<dl>
 						<dt>AM 10:00</dt>
@@ -159,7 +224,7 @@
 					</dl>
 				</section>
 				
-				<section id="day3" class="day-detail hidden">
+				<section id="day3" class="day-detail hidden mx-auto text-left space-y-10 w-11/12">
 					<h2 class="text-3xl font-bold mb-4">5월 3일 일정</h2>
 					<dl>
 						<dt>AM 10:00</dt>
@@ -167,7 +232,7 @@
 					</dl>
 				</section>
 				
-				<section id="day4" class="day-detail hidden">
+				<section id="day4" class="day-detail hidden mx-auto text-left space-y-10 w-11/12">
 					<h2 class="text-3xl font-bold mb-4">5월 3일 일정</h2>
 					<dl>
 						<dt>PM 02:00</dt>
@@ -175,7 +240,7 @@
 					</dl>
 				</section>
 				
-				<section id="day5" class="day-detail hidden">
+				<section id="day5" class="day-detail hidden mx-auto text-left space-y-10 w-11/12">
 					<h2 class="text-3xl font-bold mb-4">5월 3일 일정</h2>
 					<dl>
 						<dt>AM 10:00</dt>
@@ -183,6 +248,10 @@
 					</dl>
 				</section>
 			</div>
+		</div>
+		
+		<div id="modal" onclick="hideModal()">
+			<img id="modal-img" src="" />
 		</div>
     </body>
 </html>

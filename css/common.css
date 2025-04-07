@@ -11,3 +11,8 @@ a{
     color : inherit;
     text-decoration: none;   
 }
+
+ul,li {
+	text-decoration : none;
+	list-style : none;
+}
