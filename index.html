@@ -17,10 +17,11 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.20/fullpage.min.css" />
 		
         <script src="https://cdn.tailwindcss.com"></script>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.20/fullpage.min.js"></script>
-		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		
     </head>
 	
 	<script type="text/javascript">
@@ -33,26 +34,11 @@
 				yoyo: true,
 				ease : 'power1.inOut'
 			});
-			
-		});
-		
-		/* FullPage */
-		$(function(){
-			let myFullpage = null;
-			const startFullPage = () => {
-				if (!myFullpage) {
-					myFullpage = new fullpage('#fullpage', {
-						autoScrolling : true,
-						navigation : true,
-						scrollHorizontally: true
-					});
-				}				
-			};
-			
+
 			const overlay = document.getElementById('detailOverlay');
 			const closeBtn = document.getElementById('closeOverlay');
 			const detailBoxes = document.querySelectorAll('.day-detail');
-
+			
 			document.querySelectorAll('.move_detail').forEach(card => {
 				card.addEventListener('click', () => {
 					const targetId = card.getAttribute('data-detail');
@@ -69,32 +55,25 @@
 					overlay.classList.remove('hidden');
 					requestAnimationFrame(() => overlay.classList.add('fade-in'));
 					
-					// GSAP 애니메이션 추가 부분
 					setTimeout(() => {
-						gsap.utils.toArray(`#${targetId} > div > div`).forEach(el => {
-							gsap.fromTo(el,
-								{ opacity: 0, x: -50, scale: 0.95 },
+						const target = document.getElementById(targetId);
+						const items = target.querySelectorAll('.flex-1');
+
+						items.forEach((el) => {
+							gsap.fromTo(el, {opacity: 0, x: -50, scale: 0.95},
 								{
-									scrollTrigger: {
-										trigger: el,
-										start: "top 85%",
-										toggleActions: "play none none none"
-									},
-									opacity: 1,
-									x: 0,
-									scale: 1,
-									duration: 1,
-									ease: "power3.out",
-									onStart: () => {
-										el.classList.remove('opacity-0', 'translate-x-12'); // Tailwind 초기 상태 제거
+									scrollTrigger : {trigger: el, start: "top 90%", scroller: "#detailOverlay", toggleActions: "restart none none none"},
+									opacity: 1, x: 0, scale:1, duration:1, ease: "power3.out", onStart: () => {
+										el.classList.remove('opacity-0', 'translate-x-12');
 									}
 								}
-							);
-						});
-					}, 100); // 애니메이션 등록 시점 약간 딜레이
+							)
+						})
+					});
 				});
-			});
 
+			});
+			
 			closeBtn.addEventListener('click', () => {
 				overlay.classList.remove('fade-in');
 				overlay.classList.add('fade-out');
@@ -108,6 +87,20 @@
 			});
 		});
 		
+		/* FullPage */
+		$(function(){
+			let myFullpage = null;
+			const startFullPage = () => {
+				if (!myFullpage) {
+					myFullpage = new fullpage('#fullpage', {
+						autoScrolling : true,
+						navigation : true,
+						scrollHorizontally: true
+					});
+				}				
+			};
+		});
+			
 		/* 모달 관련 */
 		$(function(){
 			const dayDetail = document.querySelectorAll('.day-detail img');
@@ -194,14 +187,14 @@
 				</div>				
 			</section>
 			
-			<div id="detailOverlay" class="overlay hidden fixed inset-0 bg-white z-50 flex flex-col items-center justify-center text-center transition-opacity duration-500 opacity-0">
+			<div id="detailOverlay" class="overlay hidden fixed inset-0 bg-white z-50 flex flex-col items-center text-center transition-opacity duration-500 opacity-0">
 				<button id="closeOverlay" class="absolute top-0 right-1 text-3xl text-gray-600 font-bold">&times;</button>
 
 				<section id="day1" class="day-detail hidden mx-auto text-left space-y-10 w-11/12">
 						<h2 class="text-3xl font-bold text-left mb-6 mt-4 block">5월 1일 일정</h2>
 						
 						<div class="flex flex-col md:flex-row gap-4 justify-content items-center">
-							<div class="flex-1 justify-content items-center w-11/12 opacity-0 translate-x-12 transition-none">
+							<div class="flex-1 justify-content items-center w-11/12 opacity-0 translate-x-12 transition-none scroll_animation_1">
 								<h3 class="text-xl font-semibold mb-2">06:00 부산 출발</h3>
 								<img src="./images/day1/image1.jpg" class="w-full md:w-60 md:w-3/5 h-[25vh] object-cover rounded-xl shadow-md animate-img mb-4" />
 								<ul class="text-gray-700 list-disc list-inside space-y-1">
@@ -209,7 +202,40 @@
 									<li>예상 소요 시간 : 4시간</li>
 								</ul>
 							</div>
-						</div>	
+						</div>
+
+						<div class="flex flex-col md:flex-row gap-4 justify-content items-center">
+							<div class="flex-1 justify-content items-center w-11/12 opacity-0 translate-x-12 transition-none scroll_animation_1">
+								<h3 class="text-xl font-semibold mb-2">06:00 부산 출발</h3>
+								<img src="./images/day1/image1.jpg" class="w-full md:w-60 md:w-3/5 h-[25vh] object-cover rounded-xl shadow-md animate-img mb-4" />
+								<ul class="text-gray-700 list-disc list-inside space-y-1">
+									<li>평화로운 아파트에서 6시 출발</li>
+									<li>예상 소요 시간 : 4시간</li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="flex flex-col md:flex-row gap-4 justify-content items-center mb-24">
+							<div class="flex-1 justify-content items-center w-11/12 opacity-0 translate-x-12 transition-none scroll_animation_2">
+								<h3 class="text-xl font-semibold mb-2">06:00 부산 출발</h3>
+								<img src="./images/day1/image1.jpg" class="w-full md:w-60 md:w-3/5 h-[25vh] object-cover rounded-xl shadow-md animate-img mb-4" />
+								<ul class="text-gray-700 list-disc list-inside space-y-1">
+									<li>평화로운 아파트에서 6시 출발</li>
+									<li>예상 소요 시간 : 4시간</li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="flex flex-col md:flex-row gap-4 justify-content items-center mb-24">
+							<div class="flex-1 justify-content items-center w-11/12 opacity-0 translate-x-12 transition-none scroll_animation_2">
+								<h3 class="text-xl font-semibold mb-2">06:00 부산 출발</h3>
+								<img src="./images/day1/image1.jpg" class="w-full md:w-60 md:w-3/5 h-[25vh] object-cover rounded-xl shadow-md animate-img mb-4" />
+								<ul class="text-gray-700 list-disc list-inside space-y-1">
+									<li>평화로운 아파트에서 6시 출발</li>
+									<li>예상 소요 시간 : 4시간</li>
+								</ul>
+							</div>
+						</div>
 				</section>
 				
 				<section id="day2" class="day-detail hidden mx-auto text-left space-y-10 w-11/12">
