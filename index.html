@@ -114,21 +114,56 @@
 		/* 모달 관련 */
 		$(function(){
 			const dayDetail = document.querySelectorAll('.day-detail img');
-			
+			const modal = document.getElementById('modal');
 			dayDetail.forEach(function(target){
-				console.log(target);
 				target.addEventListener('click', function(src){
-					showModal(src.target.src);
+					showModal(src.target);
 				});
 			});
-			
 		});
 		
-		function showModal(src){
-			const modal = document.getElementById('modal');
-			const modalImg = document.getElementById('modal-img');
-			modalImg.src = src;
-			modal.style.display = 'block';
+		/* 이미지 슬라이더 */
+		$(function(){
+			$('.image-slider').each(function(){
+				document.querySelector('.pre_btn').style.left = "3%";
+				document.querySelector('.next_btn').style.left = "85%";
+				initGSAPSlider($(this));
+			});
+		});
+
+		function showModal(e){
+			const modal = $('#modal');
+			var slidesContainer = modal.find('.slides');
+			var images = e.closest('.image-slider').querySelectorAll('img');
+			slidesContainer.innerHTML ="";
+			
+			images.forEach(src => {
+				const li = document.createElement('li');
+				const img = document.createElement('img');
+				img.src = src.getAttribute('src');
+				li.append(img);
+				slidesContainer.append(li);
+			})
+
+			const pre_li = document.createElement('li');
+			const pre_span = document.createElement('span');
+			pre_span.textContent = "<";
+			pre_li.append(pre_span);
+			pre_li.classList.add('pre_btn');
+			pre_li.style.left = "3%";
+			slidesContainer.append(pre_li);
+
+			const next_li = document.createElement('li');
+			const next_span = document.createElement('span');
+			next_span.textContent = ">";
+			next_li.append(next_span);
+			next_li.classList.add('next_btn');
+			next_li.style.left = "85%";
+			slidesContainer.append(next_li);
+
+			modal.css('display','block');
+
+			initGSAPSlider(modal.find('.image-slider'));
 		}
 		
 		function hideModal(){
@@ -136,17 +171,59 @@
 		}
 
 		function copyClipboard(e){
-			let copyText = e.textContent;
+			const text = e.textContent;
 			const toast = document.getElementById('toast');
-			
-			navigator.clipboard.writeText(copyText).then(() => {
-				toast.classList.remove("opacity-0");
-				toast.classList.add("opacity-100");
 
-				setTimeout(() => {
-					toast.classList.remove("opacity-100");
-					toast.classList.add("opacity-0");
-				}, 1000);
+			const tempTextarea = document.createElement("textarea");
+			tempTextarea.value = text;
+			document.body.appendChild(tempTextarea);
+			tempTextarea.select();
+			tempTextarea.setSelectionRange(0, 99999);
+
+			document.execCommand("copy");
+			document.body.removeChild(tempTextarea);
+
+			toast.classList.remove("opacity-0");
+			toast.classList.add("opacity-100");
+
+			setTimeout(() => {
+				toast.classList.remove("opacity-100");
+				toast.classList.add("opacity-0");
+			},1500);
+		}
+
+		function initGSAPSlider(slider){
+			console.log(slider);
+			const slides = slider.find('li img');
+			let currentIndex = 0;
+	
+			slides.parent().addClass('slide-item');
+			slides.parent().css('opacity', 0);
+			slides.eq(currentIndex).parent().addClass('active').css('opacity', 1);
+			
+			function goToSlide(nextIndex, direction) {
+				const currentSlide = slides.eq(currentIndex).parent();
+				const nextSlide = slides.eq(nextIndex).parent();
+	
+				gsap.set(nextSlide, { x: (direction === 'next') ? '120%' : '-100%', opacity: 1, zIndex: 2 });
+				gsap.to(currentSlide, { x: (direction === 'next') ? '-120%' : '100%', duration: 0.8, ease: 'power2.inOut', onComplete: () => {
+					currentSlide.removeClass('active').css({opacity:0, x:0});
+				}});
+				gsap.to(nextSlide, { x: '0%', duration: 0.8, ease: 'power2.inOut', onComplete: () => {
+					nextSlide.addClass('active');
+				}});
+	
+				currentIndex = nextIndex;
+			}
+	
+			slider.find('.next_btn').on('click', function(){
+				const nextIndex = (currentIndex + 1) % slides.length;
+				goToSlide(nextIndex, 'next');
+			});
+	
+			slider.find('.pre_btn').on('click', function(){
+				const nextIndex = (currentIndex - 1 + slides.length) % slides.length;
+				goToSlide(nextIndex, 'prev');
 			});
 		}
 	</script>
@@ -187,18 +264,18 @@
 						<dt>11:00</dt>
 						<dd>해동 용궁사</dd> <br/>	
 						<dt>12:00</dt>
-						<dd>용궁사 근처 카페</dd> <br/>	
+						<dd>카페베이스</dd> <br/>	
 						<dt>18:00</dt> 
 						<dd>스카이 캡슐</dd> <br/>
 						<dt>20:00</dt>
-						<dd>야경 및 회 포장</dd> 
+						<dd>길사시미전문점</dd> 
 					</dl>
 				</div>
 				  <div class="move_detail card" data-detail="day3">
 					<strong>5월 3일 (토)</strong>
 					<dl>
 						<dt>11:30</dt>
-						<dd>솔내음한정식</dd> <br/>
+						<dd>?!!??</dd> <br/>
 						<dt>13:00</dt>
 						<dd>책방거리 (카페)</dd> <br/>
 						<dt>15:00</dt>
@@ -211,9 +288,17 @@
 				</div>
 				  <div class="move_detail card" data-detail="day4">
 					<strong>5월 4일 (일)</strong>
+					<dl>
+						<dd>11:30</dd>
+						<dt>수변최고국밥</dt>
+					</dl>
 				  </div>
 				  <div class="move_detail card" data-detail="day5">
 					<strong>5월 5일 (월)</strong>
+					<dl>
+						<dt>11:30</dt>
+						<dd>해운대가야밀면</dd>
+					</dl>
 				  </div>
 				</div>				
 			</section>
@@ -227,7 +312,12 @@
 						<div class="flex flex-col flex-1 md:flex-row gap-4 justify-content items-center  opacity-0 translate-x-12 transition-none scroll_animation_1">
 							<div class="justify-content items-center w-11/12">
 								<h3 class="text-xl font-semibold mb-2">06:00 부산 출발</h3>
-								<img src="./images/day1/image1.jpg" class="w-full md:w-60 md:w-3/5 h-[35vh] object-cover rounded-xl shadow-md animate-img mb-4" />
+								<ul class="image-slider w-full md:w-60 md:w-3/5 h-[35vh] mb-4">
+									<li><img src="./images/day1/image1.jpg" class="object-cover rounded-xl shadow-md animate-img" /></li>
+									<li class="pre_btn"><span><</span></li>
+									<li class="next_btn"><span>></span></li>
+								</ul>
+								
 								<ul class="text-gray-700 list-disc list-inside space-y-1">
 									<li>평화로운 아파트에서 오전 6시 출발</li>
 									<li>예상 소요 시간 : 4시간</li>
@@ -240,11 +330,13 @@
 						<div class="flex flex-col flex-1 md:flex-row gap-4 justify-content items-center opacity-0 translate-x-12 transition-none scroll_animation_1">
 							<div class="justify-content items-center w-11/12 ">
 								<h3 class="text-xl font-semibold mb-2">11:00 차애전할매칼국수</h3>
-								<img src="./images/day1/image2.jpg" class="w-full md:w-60 md:w-3/5 h-[35vh] object-cover rounded-xl shadow-md animate-img mb-4" />
+								<ul class="image-slider w-full md:w-60 md:w-3/5 h-[35vh] mb-4">
+									<li><img src="./images/day1/image2.jpg" class="object-cover rounded-xl shadow-md animate-img" /></li>
+								</ul>
 								<ul class="text-gray-700 list-disc list-inside space-y-1">
 									<li>차애전할매칼국수 || <a href="tel:051-751-9639">051-751-9639</a> </li>
 									<li>주소 : <span onclick="copyClipboard(this);"> 부산 연제구 과정로191번가길 70 </span></li>
-									<li><a href="javascript:showModal('./images/day1/menu/menu1.jpg');">메뉴판 보기</a></li>
+									<li><a href="javascript:showModal(this);">메뉴판 보기</a></li>
 									<li>상세 설명 : 미쉐린 가이드 부산 2025에 선정된 칼국수 맛집!!</li>
 									<li>영업 시간 : 09 : 00 ~ 15:25 [브레이크타임 없음]</li>
 									<li>주차 : 별도 주차장 없음</li>
@@ -255,11 +347,13 @@
 						<div class="flex flex-col flex-1 md:flex-row gap-4 justify-content items-center mb-24 opacity-0 translate-x-12 transition-none scroll_animation_2">
 							<div class="justify-content items-center w-11/12 ">
 								<h3 class="text-xl font-semibold mb-2">14:00 스미다 티하우스</h3>
-								<img src="./images/day1/image3.jpg" class="w-full md:w-60 md:w-3/5 h-[35vh] object-cover rounded-xl shadow-md animate-img mb-4" />
+								<ul class="image-slider w-full md:w-60 md:w-3/5 h-[35vh] mb-4">
+									<li><img src="./images/day1/image3.jpg" class="object-cover rounded-xl shadow-md animate-img" /></li>
+								</ul>
 								<ul class="text-gray-700 list-disc list-inside space-y-1">
 									<li>스미다 티하우스 || <a href="tel:0507-1396-2827">0507-1396-2827</a> </li>
 									<li>주소 : <span onclick="copyClipboard(this);"> 부산 연제구 과정로278번길 47-11 1층 </span></li>
-									<li><a href="javascript:showModal('./images/day1/menu/menu2.png');">메뉴판 보기</a></li>
+									<li><a href="javascript:showModal(this);">메뉴판 보기</a></li>
 									<li>상세 설명 : 일본 감성의 전통 찻 집!</li>
 									<li>영업 시간 : 10:30 - 19:00</li>
 								</ul>
@@ -269,7 +363,9 @@
 						<div class="flex flex-col flex-1 md:flex-row gap-4 justify-content items-center mb-24 opacity-0 translate-x-12 transition-none scroll_animation_2">
 							<div class="justify-content items-center w-11/12 ">
 								<h3 class="text-xl font-semibold mb-2">06:00 부산 출발</h3>
-								<img src="./images/day1/image1.jpg" class="w-full md:w-60 md:w-3/5 h-[35vh] object-cover rounded-xl shadow-md animate-img mb-4" />
+								<ul class="image-slider w-full md:w-60 md:w-3/5 h-[35vh] mb-4">
+									<li><img src="./images/day1/image3.jpg" class="object-cover rounded-xl shadow-md animate-img" /></li>
+								</ul>
 								<ul class="text-gray-700 list-disc list-inside space-y-1">
 									<li>평화로운 아파트에서 6시 출발</li>
 									<li>예상 소요 시간 : 4시간</li>
@@ -316,8 +412,11 @@
 			</div>
 		</div>
 		
-		<div id="modal" onclick="hideModal()">
-			<img id="modal-img" src="" />
+		<div id="modal">
+			<button onclick="hideModal()" id="closeModal" class="absolute top-0 right-1 text-5xl text-white font-bold">×</button>
+			<div class="image-slide">
+				<ul class="slides image-slider"></ul>
+			</div>
 		</div>
     </body>
 </html>

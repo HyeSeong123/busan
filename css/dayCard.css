@@ -58,3 +58,8 @@
 .flex-1 ul li {
     font-size : 20px;
 }
+
+.day-detail ul li img{
+    height: 100%;
+    width : 100%;
+}
