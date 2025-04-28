@@ -41,6 +41,7 @@
 			
 			document.querySelectorAll('.move_detail').forEach(card => {
 				card.addEventListener('click', () => {
+					document.body.classList.add('no-scroll');
 					const targetId = card.getAttribute('data-detail');
 
 					detailBoxes.forEach(box => box.classList.add('hidden'));
@@ -85,6 +86,7 @@
 			});
 			
 			closeBtn.addEventListener('click', () => {
+				document.body.classList.remove('no-scroll');
 				overlay.classList.remove('fade-in');
 				overlay.classList.add('fade-out');
 
@@ -109,6 +111,10 @@
 					});
 				}				
 			};
+
+			if (navigator.userAgent.includes('KAKAOTALK')) {
+				document.querySelector('.section').style.height = '148vh';
+			}
 		});
 			
 		/* 모달 관련 */
@@ -125,8 +131,11 @@
 		/* 이미지 슬라이더 */
 		$(function(){
 			$('.image-slider').each(function(){
-				document.querySelector('.pre_btn').style.left = "3%";
-				document.querySelector('.next_btn').style.left = "85%";
+				if ( document.querySelector('.pre_btn') != null && document.querySelector('.next_btn') != null ){
+					document.querySelector('.pre_btn').style.left = "3%";
+					document.querySelector('.next_btn').style.left = "85%";
+				}
+				
 				initGSAPSlider($(this));
 			});
 		});
@@ -134,7 +143,44 @@
 		function showModal(e){
 			const modal = $('#modal');
 			var slidesContainer = modal.find('.slides');
-			var images = e.closest('.image-slider').querySelectorAll('img');
+			var images = e.closest('.image-slider').querySelectorAll('li > img');
+			slidesContainer.innerHTML ="";
+			console.log(slidesContainer);
+			images.forEach(src => {
+				const li = document.createElement('li');
+				const img = document.createElement('img');
+				img.src = src.getAttribute('src');
+				li.append(img);
+				slidesContainer.append(li);
+			})
+
+			if ( images.length > 1 ){
+				const pre_li = document.createElement('li');
+				const pre_span = document.createElement('span');
+				pre_span.textContent = "<";
+				pre_li.append(pre_span);
+				pre_li.classList.add('pre_btn');
+				pre_li.style.left = "3%";
+				slidesContainer.append(pre_li);
+
+				const next_li = document.createElement('li');
+				const next_span = document.createElement('span');
+				next_span.textContent = ">";
+				next_li.append(next_span);
+				next_li.classList.add('next_btn');
+				next_li.style.left = "85%";
+				slidesContainer.append(next_li);
+
+			}
+			modal.css('display','block');
+			initGSAPSlider(modal.find('.image-slider'));
+		}
+		
+		function showMenu(e){
+			const modal = $('#modal');
+			const container = document.getElementById(e);
+			var slidesContainer = modal.find('.slides');
+			var images = container.querySelectorAll('li img');
 			slidesContainer.innerHTML ="";
 			
 			images.forEach(src => {
@@ -145,29 +191,30 @@
 				slidesContainer.append(li);
 			})
 
-			const pre_li = document.createElement('li');
-			const pre_span = document.createElement('span');
-			pre_span.textContent = "<";
-			pre_li.append(pre_span);
-			pre_li.classList.add('pre_btn');
-			pre_li.style.left = "3%";
-			slidesContainer.append(pre_li);
+			if ( images.length > 1 ){
+				const pre_li = document.createElement('li');
+				const pre_span = document.createElement('span');
+				pre_span.textContent = "<";
+				pre_li.append(pre_span);
+				pre_li.classList.add('pre_btn');
+				pre_li.style.left = "3%";
+				slidesContainer.append(pre_li);
 
-			const next_li = document.createElement('li');
-			const next_span = document.createElement('span');
-			next_span.textContent = ">";
-			next_li.append(next_span);
-			next_li.classList.add('next_btn');
-			next_li.style.left = "85%";
-			slidesContainer.append(next_li);
-
+				const next_li = document.createElement('li');
+				const next_span = document.createElement('span');
+				next_span.textContent = ">";
+				next_li.append(next_span);
+				next_li.classList.add('next_btn');
+				next_li.style.left = "85%";
+				slidesContainer.append(next_li);
+			}
 			modal.css('display','block');
-
 			initGSAPSlider(modal.find('.image-slider'));
 		}
-		
+
 		function hideModal(){
 			document.getElementById('modal').style.display = 'none';
+			document.querySelector('.slides').innerHTML = "";
 		}
 
 		function copyClipboard(e){
@@ -193,7 +240,6 @@
 		}
 
 		function initGSAPSlider(slider){
-			console.log(slider);
 			const slides = slider.find('li img');
 			let currentIndex = 0;
 	
@@ -314,8 +360,6 @@
 								<h3 class="text-xl font-semibold mb-2">06:00 부산 출발</h3>
 								<ul class="image-slider w-full md:w-60 md:w-3/5 h-[35vh] mb-4">
 									<li><img src="./images/day1/image1.jpg" class="object-cover rounded-xl shadow-md animate-img" /></li>
-									<li class="pre_btn"><span><</span></li>
-									<li class="next_btn"><span>></span></li>
 								</ul>
 								
 								<ul class="text-gray-700 list-disc list-inside space-y-1">
@@ -336,10 +380,18 @@
 								<ul class="text-gray-700 list-disc list-inside space-y-1">
 									<li>차애전할매칼국수 || <a href="tel:051-751-9639">051-751-9639</a> </li>
 									<li>주소 : <span onclick="copyClipboard(this);"> 부산 연제구 과정로191번가길 70 </span></li>
-									<li><a href="javascript:showModal(this);">메뉴판 보기</a></li>
-									<li>상세 설명 : 미쉐린 가이드 부산 2025에 선정된 칼국수 맛집!!</li>
+									<li>
+										<a href="javascript:showMenu('menu1');">메뉴판 보기</a>
+										<ul id="menu1" class="show_menu">
+											<li><img src="./images/day1/menu/menu1.jpg"></li>
+										</ul>
+									</li>
+									<li>상세 설명 :
+										<p>미쉐린 가이드 부산 2025에 선정된 칼국수 맛집!!</p>
+										<p>※ 할머니가 운영하는 곳으로 가야함!</p>
+									</li>
 									<li>영업 시간 : 09 : 00 ~ 15:25 [브레이크타임 없음]</li>
-									<li>주차 : 별도 주차장 없음</li>
+									<li onclick="copyClipboard(this);">주차 : 부산 연제구 고분로 181</li>
 								</ul>
 							</div>
 						</div>
@@ -353,37 +405,72 @@
 								<ul class="text-gray-700 list-disc list-inside space-y-1">
 									<li>스미다 티하우스 || <a href="tel:0507-1396-2827">0507-1396-2827</a> </li>
 									<li>주소 : <span onclick="copyClipboard(this);"> 부산 연제구 과정로278번길 47-11 1층 </span></li>
-									<li><a href="javascript:showModal(this);">메뉴판 보기</a></li>
+									<li>
+										<a href="javascript:showMenu('menu2');">메뉴판 보기</a>
+										<ul id="menu2" class="show_menu">
+											<li><img src="./images/day1/menu/menu2.jpg"></li>
+											<li><img src="./images/day1/menu/menu2-2.jpg"></li>
+										</ul>
+									</li>
 									<li>상세 설명 : 일본 감성의 전통 찻 집!</li>
 									<li>영업 시간 : 10:30 - 19:00</li>
+									<li>주차 : 노블레스 스퀘어 상가 주차장 (1시간 지원)</li>
 								</ul>
 							</div>
 						</div>
 
 						<div class="flex flex-col flex-1 md:flex-row gap-4 justify-content items-center mb-24 opacity-0 translate-x-12 transition-none scroll_animation_2">
 							<div class="justify-content items-center w-11/12 ">
-								<h3 class="text-xl font-semibold mb-2">06:00 부산 출발</h3>
+								<h3 class="text-xl font-semibold mb-2">17:00 해목</h3>
 								<ul class="image-slider w-full md:w-60 md:w-3/5 h-[35vh] mb-4">
-									<li><img src="./images/day1/image3.jpg" class="object-cover rounded-xl shadow-md animate-img" /></li>
+									<li><img src="./images/day1/image4.jpg" class="object-cover rounded-xl shadow-md animate-img" /></li>
 								</ul>
 								<ul class="text-gray-700 list-disc list-inside space-y-1">
-									<li>평화로운 아파트에서 6시 출발</li>
-									<li>예상 소요 시간 : 4시간</li>
+									<li>해목 || <a href="tel:0507-1385-3730">0507-1385-3730</a> </li>
+									<li>주소 : <span onclick="copyClipboard(this);"> 부산 해운대구 구남로24번길 8 </span></li>
+									<li>
+										<a href="javascript:showMenu('menu3');">메뉴판 보기</a>
+										<ul id="menu3" class="show_menu">
+											<li><img src="./images/day1/menu/menu3.jpg"></li>
+											<li><img src="./images/day1/menu/menu3-2.jpg"></li>
+											<li><img src="./images/day1/menu/menu3-3.jpg"></li>
+											<li><img src="./images/day1/menu/menu3-4.jpg"></li>
+											<li><img src="./images/day1/menu/menu3-5.jpg"></li>
+											<li><img src="./images/day1/menu/menu3-6.jpg"></li>
+										</ul>
+									</li>
+									<li>상세 설명 : 미쉐린 가이드 부산2025에 선정된 고급스러운 찐 부산 맛집!</li>
+									<li>영업 시간 : 11:00 - 21:00 [브레이크타임 15:00 - 17:00]</li>
+									<li>주차 : 해운대 해수욕장 공영 주차장</li>
 								</ul>
 							</div>
 						</div>
 				</section>
 				
 				<section id="day2" class="day-detail hidden mx-auto text-left space-y-10 w-11/12">
-					<h2 class="text-3xl font-bold mb-4">5월 2일 일정</h2>
-					<dl>
-						<dt>AM 10:00</dt>
-						<dd>이재모 피자</dd> <br/>
-						<dt>PM 06:00</dt> 
-						<dd>스카이 캡슐</dd> <br/>
-						<dt>PM 08:00</dt>
-						<dd>야경</dd> <br/> <br/>
-					</dl>
+					<h2 class="text-3xl font-bold text-left mb-6 mt-4 block">5월 2일 일정</h2>
+						
+					<div class="flex flex-col flex-1 md:flex-row gap-4 justify-content items-center mb-24 opacity-0 translate-x-12 transition-none scroll_animation_2">
+						<div class="justify-content items-center w-11/12 ">
+							<h3 class="text-xl font-semibold mb-2">10:00 흑동우동소바 송정본점</h3>
+							<ul class="image-slider w-full md:w-60 md:w-3/5 h-[35vh] mb-4">
+								<li><img src="./images/day2/image1.jpg" class="object-cover rounded-xl shadow-md animate-img" /></li>
+							</ul>
+							<ul class="text-gray-700 list-disc list-inside space-y-1">
+								<li>흑동우동소바 송정본점|| <a href="tel:0507-1385-3730">0507-1319-9956</a> </li>
+								<li>주소 : <span onclick="copyClipboard(this);"> 부산 해운대구 송정동 443-3 </span></li>
+								<li>
+									<a href="javascript:showMenu('menu4');">메뉴판 보기</a>
+									<ul id="menu4" class="show_menu">
+										<li><img src="./images/day2/menu/image1.jpg"></li>
+									</ul>
+								</li>
+								<li>상세 설명 : 미쉐린 가이드 부산2025에 선정된 고급스러운 찐 부산 맛집!</li>
+								<li>영업 시간 : 11:00 - 21:00 [브레이크타임 15:00 - 17:00]</li>
+							</ul>
+						</div>
+					</div>
+
 				</section>
 				
 				<section id="day3" class="day-detail hidden mx-auto text-left space-y-10 w-11/12">
