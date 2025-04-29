@@ -69,6 +69,13 @@
     width : 100%;
 }
 
+.day-detail ul li a,
+.day-detail ul li span
+{
+    color : #35baf2;
+    text-decoration: underline;
+}
+
 .show_menu {
     display : none;
 }
